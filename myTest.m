@@ -18,10 +18,12 @@ Player_Score = [player,score];
 tic;
 for i = 1:height(Play_by_Play)
     if Play_by_Play{i,8} > 0
-        playerName = Play_by_Play{i,12};
+        playerName1 = Play_by_Play{i,12};
+        playerName2 = Play_by_Play{i,13};
+        playerName3 = Play_by_Play{i,14};
         
         for j = 1:height(Player_Score)
-            if strcmp(Player_Score{j,1}, playerName)
+            if strcmp(Player_Score{j,1}, playerName1) || strcmp(Player_Score{j,1}, playerName2) || strcmp(Player_Score{j,1}, playerName3)
                 Player_Score{j,2} =  Player_Score{j,2} + Play_by_Play{i,8};
             end
         end                
