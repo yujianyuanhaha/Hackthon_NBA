@@ -1,8 +1,3 @@
-Game_Lineup = readtable('Game_Lineup_Sort.csv');
-Game_Lineup0 = readtable('Game_Lineup_raw.csv');
-Play_by_Play = readtable('Play_by_Play.csv');
-
-
 % GOAL, extract tiny table, deal with 5 period
 % Start 10, each period each game
 % [game id, period, team 1, play1on, ...,player5on, play1off, player5off...
@@ -15,6 +10,11 @@ Play_by_Play = readtable('Play_by_Play.csv');
 % 4. duplicate 'personal id' by 4, and rename head
 % 5. sort by 'game id','period','team id'  (notice could be 5 period)
 % ---> get 'Game_lineup_trim' file
+
+
+Game_Lineup = readtable('Game_Lineup_Sort.csv');
+Game_Lineup0 = readtable('Game_Lineup_raw.csv');
+Play_by_Play = readtable('Play_by_Play.csv');
 
 i = 0;
 tic;
@@ -120,45 +120,48 @@ while i < height(Game_Lineup)
                 end
                 
             end
+            
+            
+            
+            
+            % --------- foul-substitue-foul reccorrection ---------------
+            if k+3 <=height(play_by_Play)
+                if play_by_Play{k+1,'Event_Msg_Type'} == 8 ...
+                        && play_by_Play{k+2,'Event_Msg_Type'} == 3
+                    outPlayer = play_by_Play{k+1,'Person1'};
+                    inPlayer  = play_by_Play{k+1,'Person2'};
+                    v = strcmp(outPlayer, Result.Person_id );
+                    u = strcmp(inPlayer, Result.Person_id );
+                    if strcmp(outPlayer, curWinPlayers)
+                        Result{v,'OffRtg'} = Result{v,'OffRtg'} + 1;
+                        Result{u,'OffRtg'} = Result{u,'OffRtg'} - 1;
+                        % barely happen
+                    else
+                        Result{v,'DefRtg'} = Result{v,'DefRtg'} + 1;
+                        Result{u,'DefRtg'} = Result{u,'DefRtg'} - 1;
+                    end
+                end
+            end
+            
         end
         
+        
+        
          % ---- update current player lists ---------
-        if play_by_Play{k,'Event_Msg_Type'} == 8
-            
-            %          if k == 346
-            %              disp('----346 ------');
-            %          end
-            
-            outPlayer = play_by_Play{k,'Person1'};
-            inPlayer = play_by_Play{k,'Person2'};
-            %           if  strcmp( outPlayer ,'c5dd5b2e3b975f0849d9b74e74125cb9')
-            %                 k
-            %                 curPeriod
-            %                 disp('here out');
-            %           end
-            %           if  strcmp( inPlayer ,'c5dd5b2e3b975f0849d9b74e74125cb9')
-            %                 k
-            %                 curPeriod
-            %                  disp('here in');
-            %           end
-            if strcmp( play_by_Play{k,'Team_id'}, team2{1})
-                x = start10{curPeriod,4:8};
-                v = strcmp(x, outPlayer );
-                ind = find(v);
-                start10{curPeriod,3+ind} = inPlayer;
+     if play_by_Play{k,'Event_Msg_Type'} == 8 
+  
+         outPlayer = play_by_Play{k,'Person1'};
+         inPlayer = play_by_Play{k,'Person2'};         
+
+            x = start10{curPeriod,[4:8,10:14]};
+            v = strcmp(x, outPlayer );
+            ind = find(v);
+            if ind >= 6
+                start10{curPeriod,4+ind} = inPlayer;
             else
-                x = start10{curPeriod,10:14};
-                v = strcmp(x, outPlayer );
-                ind = find(v);
-                start10{curPeriod,9+ind} = inPlayer;
-            end
-            
-            if numel(unique(start10{curPeriod,[4:8,10:14]})) ~= 10
-                disp('error');
-                disp(play_by_Play{k,'Game_id'});
-            end
-            
-        end               
+                start10{curPeriod,3+ind} = inPlayer;
+            end                  
+     end              
         % ---------- turn over, 24s: only counts possion -----------
         if  play_by_Play{k,'Event_Msg_Type'} == 5 ||...
                 play_by_Play{k,'Event_Msg_Type'} == 13

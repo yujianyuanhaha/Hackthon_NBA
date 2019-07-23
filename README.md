@@ -7,7 +7,9 @@ Use the [attached data](https://nba.box.com/s/r65z3wpihm1z2n34bgz04lcvvy1fc2ox) 
 
 
 # How to run
-execute `main.m` in matlab
+execute `main.m` in matlab.   
+execute `toyMain.m` in matlab for a game.   
+
 ## Input
 * `Game_Lineup_Sort.csv`
 * `Game_Lineup_raw.csv`
