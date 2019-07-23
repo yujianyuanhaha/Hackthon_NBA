@@ -38,11 +38,7 @@ for k = 1:height(play_by_Play)
     % 2. update points
     if play_by_Play{k,'Event_Msg_Type'} == 1 ||...
            play_by_Play{k,'Event_Msg_Type'} == 3
-        winTeam = play_by_Play{k,'Team_id'}; 
-        
-%         if k ==26
-%             disp("here");
-%         end
+        winTeam = play_by_Play{k,'Team_id'};        
               
         if strcmp(winTeam{1}, team2{1})            
             curWinPlayers = start10{curPeriod,4:8} ;
@@ -54,7 +50,7 @@ for k = 1:height(play_by_Play)
         
         for j = 1:5
             v = strcmp(curWinPlayers(j), Result.Person_id );
-            Result{v,'OffRtg'} = Result{v,'OffRtg'} + play_by_Play{k,'Option1'};
+            Result{v,'OffRtg'} = Result{v,'OffRtg'} + play_by_Play{v,'Option1'};
             Result{v,'Pos'} = Result{v,'Pos'} + 1;
              if k > 2
                 if play_by_Play{k-1,'Event_Msg_Type'} == 3 &&  play_by_Play{k,'Event_Msg_Type'} == 3
@@ -63,7 +59,7 @@ for k = 1:height(play_by_Play)
             end
 
             u = strcmp(curLosPlayers(j), Result.Person_id );
-            Result{u,'DefRtg'} = Result{u,'DefRtg'} + play_by_Play{k,'Option1'};
+            Result{u,'DefRtg'} = Result{u,'DefRtg'} + play_by_Play{u,'Option1'};
             Result{u,'Pos'} = Result{u,'Pos'} + 1;
             if k > 2
                 if play_by_Play{k-1,'Event_Msg_Type'} == 3 &&  play_by_Play{k,'Event_Msg_Type'} == 3
@@ -76,24 +72,13 @@ for k = 1:height(play_by_Play)
     
           
      if play_by_Play{k,'Event_Msg_Type'} == 8 
-         
-%          if k == 346
-%              disp('----346 ------');
-%          end
-         
          outPlayer = play_by_Play{k,'Person1'};
          inPlayer = play_by_Play{k,'Person2'};         
-          if  strcmp( outPlayer ,'c5dd5b2e3b975f0849d9b74e74125cb9')              
-                
-                k
-                curPeriod
+          if  strcmp( outPlayer ,'e814950408915f43de2b079dce7c21c5')              
                 disp('here out');
           end          
-          if  strcmp( inPlayer ,'c5dd5b2e3b975f0849d9b74e74125cb9') 
-               
-                k
-                curPeriod
-                 disp('here in');
+          if  strcmp( inPlayer ,'e814950408915f43de2b079dce7c21c5') 
+                disp('here in');
           end         
          if strcmp( play_by_Play{k,'Team_id'}, team2{1}) 
              x = start10{curPeriod,4:8};
@@ -105,25 +90,18 @@ for k = 1:height(play_by_Play)
               v = strcmp(x, outPlayer );
              ind = find(v);
              start10{curPeriod,9+ind} = inPlayer;
-         end
-         
-%          if numel(unique(start10{curPeriod,[4:8,10:14]})) ~= 10
-%              disp('error')
-%          end
-         
-         
+         end              
      end
      
      
      % miss final shot, turn over, 24s --> only counts possion
 
     
-     if  play_by_Play{k,'Event_Msg_Type'} == 5 ||...
-             play_by_Play{k,'Event_Msg_Type'} == 13 
-         for j = [4:8,10:14]
-             u = strcmp(start10{curPeriod,j}, Result.Person_id );
+     if  play_by_Play{k,'Event_Msg_Type'} == 5 
+                 for j = [4:8,10:14]
+            v = strcmp(start10{curPeriod,j}, Result.Person_id );
              Result{u,'Pos'} = Result{u,'Pos'} + 1;
-         end
+                 end
      end
      
      
