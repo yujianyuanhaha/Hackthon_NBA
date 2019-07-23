@@ -153,9 +153,10 @@ while i < height(Game_Lineup)
                 start10{curPeriod,9+ind} = inPlayer;
             end
             
-            %          if numel(unique(start10{curPeriod,[4:8,10:14]})) ~= 10
-            %              disp('error')
-            %          end          
+            if numel(unique(start10{curPeriod,[4:8,10:14]})) ~= 10
+                disp('error');
+                disp(play_by_Play{k,'Game_id'});
+            end
             
         end               
         % ---------- turn over, 24s: only counts possion -----------

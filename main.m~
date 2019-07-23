@@ -53,6 +53,10 @@ while i < height(Game_Lineup)
     
     % ====== init Score table: Result =======================
     Start10 = getStart10(subTab);
+    game_Lineup0 = subTab0;
+    play_by_Play = subPlay;
+    start10 = Start10;
+    
     len1 = numel(find( cell2mat( game_Lineup0{1:15,5})=='A'));
     len2 = numel(find( cell2mat( game_Lineup0{16:30,5}) =='A'));
 
@@ -74,7 +78,7 @@ while i < height(Game_Lineup)
         'After',3);
     Result.Properties.VariableNames([4:6]) = {'Pos' 'OffRtg' 'DefRtg'};
     
-    tic;
+
     
     
     % ============ iteration over  play_by_Play ===========
@@ -118,7 +122,7 @@ while i < height(Game_Lineup)
             end
         end
         
-         % ---- update ---------
+         % ---- update current player lists ---------
         if play_by_Play{k,'Event_Msg_Type'} == 8
             
             %          if k == 346
@@ -149,12 +153,13 @@ while i < height(Game_Lineup)
                 start10{curPeriod,9+ind} = inPlayer;
             end
             
-            %          if numel(unique(start10{curPeriod,[4:8,10:14]})) ~= 10
-            %              disp('error')
-            %          end          
+            if numel(unique(start10{curPeriod,[4:8,10:14]})) ~= 10
+                disp('error')
+                dis
+            end
             
         end               
-        % turn over, 24s --> only counts possion
+        % ---------- turn over, 24s: only counts possion -----------
         if  play_by_Play{k,'Event_Msg_Type'} == 5 ||...
                 play_by_Play{k,'Event_Msg_Type'} == 13
             for j = [4:8,10:14]
@@ -170,6 +175,7 @@ while i < height(Game_Lineup)
  
 end
 
+% ========================== trim and save results ==========================
 R{:,'OffRtg'} = round( ( R{:,'OffRtg'}'*100 ./ R{:,'Pos'}' )' *100)/100;
 R{:,'DefRtg'} =  round( (R{:,'DefRtg'}'*100 ./ R{:,'Pos'}' )' *100)/100;
 
